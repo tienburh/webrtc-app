@@ -1,31 +1,34 @@
+const express = require("express");
+const http = require("http");
 const WebSocket = require("ws");
-const wss = new WebSocket.Server({ port: 3000 });
 
-let users = {};
+const app = express();
+const server = http.createServer(app);
 
-wss.on("connection", function connection(ws) {
-    ws.on("message", function incoming(message) {
-        let data = JSON.parse(message);
-
-        switch (data.type) {
-            case "join":
-                users[data.name] = ws;
-                ws.name = data.name;
-                break;
-
-            case "offer":
-            case "answer":
-            case "candidate":
-                if (users[data.target]) {
-                    users[data.target].send(JSON.stringify(data));
-                }
-                break;
-        }
-    });
-
-    ws.on("close", () => {
-        delete users[ws.name];
-    });
+// Serve basic web page
+app.get("/", (req, res) => {
+  res.send("WebRTC signaling server is running ✅");
 });
 
-console.log("WebSocket signaling server running...");
+// WebSocket setup
+const wss = new WebSocket.Server({ server });
+
+wss.on("connection", (ws) => {
+  console.log("New client connected");
+
+  ws.on("message", (message) => {
+    console.log("Received:", message);
+    // Broadcast to all other clients
+    wss.clients.forEach((client) => {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(message);
+      }
+    });
+  });
+});
+
+// Start server
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`WebSocket signaling server running on port ${PORT}`);
+});
