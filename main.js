@@ -16,7 +16,7 @@ document.getElementById("join-btn").onclick = async () => {
         return;
     }
 
-    socket = new WebSocket("ws://localhost:3000");
+    socket = new WebSocket("ws://WebRTC.onrender.com");
 
     socket.onopen = () => {
         socket.send(JSON.stringify({ type: "join", name: yourName }));
