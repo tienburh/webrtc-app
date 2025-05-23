@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>WebRTC with Signaling</title>
+    <style>
+        video {
+            width: 45%;
+            margin: 10px;
+            border: 2px solid #333;
+        }
+    </style>
+</head>
+<body>
+    <h2>WebRTC Video Call</h2>
+
+    <div>
+        <label>Your name:</label>
+        <input id="your-name" />
+        <label>Target name:</label>
+        <input id="target-name" />
+        <button id="join-btn">Join</button>
+    </div>
+
+    <div>
+        <button id="start-call" disabled>Start Call</button>
+    </div>
+
+    <video id="local-video" autoplay playsinline muted></video>
+    <video id="remote-video" autoplay playsinline></video>
+
+    <script src="main.js"></script>
+</body>
+</html>
