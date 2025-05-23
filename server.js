@@ -5,12 +5,12 @@ const WebSocket = require("ws");
 const app = express();
 const server = http.createServer(app);
 
-// Serve basic web page
+// Định tuyến HTTP cơ bản
 app.get("/", (req, res) => {
   res.send("WebRTC signaling server is running ✅");
 });
 
-// WebSocket setup
+// Thiết lập WebSocket
 const wss = new WebSocket.Server({ server });
 
 wss.on("connection", (ws) => {
@@ -18,7 +18,7 @@ wss.on("connection", (ws) => {
 
   ws.on("message", (message) => {
     console.log("Received:", message);
-    // Broadcast to all other clients
+    // Gửi tin nhắn đến tất cả các client khác
     wss.clients.forEach((client) => {
       if (client !== ws && client.readyState === WebSocket.OPEN) {
         client.send(message);
@@ -27,8 +27,8 @@ wss.on("connection", (ws) => {
   });
 });
 
-// Start server
+// Lắng nghe trên cổng được chỉ định bởi Render
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`WebSocket signaling server running on port ${PORT}`);
+  console.log(`Server is listening on port ${PORT}`);
 });
